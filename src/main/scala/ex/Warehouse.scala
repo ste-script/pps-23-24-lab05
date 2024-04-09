@@ -12,8 +12,11 @@ object Item:
   def apply(
       code: Int,
       name: String,
-      tags: Sequence[String] = Sequence.empty
-  ): Item = ItemImpl(code, name, tags)
+      tags: String*
+  ): Item =
+    val s: Sequence[String] = Sequence()
+    val e = tags.foreach(m => s.concat(Sequence[String](m)))
+    ItemImpl(code, name, s)
   private case class ItemImpl(
       override val code: Int,
       override val name: String,
@@ -76,9 +79,9 @@ object Warehouse:
 @main def mainWarehouse(): Unit =
   val warehouse = Warehouse()
 
-  val dellXps = Item(33, "Dell XPS 15", Sequence("notebook"))
-  val dellInspiron = Item(34, "Dell Inspiron 13", Sequence("notebook"))
-  val xiaomiMoped = Item(35, "Xiaomi S1", Sequence("moped", "mobility"))
+  val dellXps = Item(33, "Dell XPS 15", "notebook")
+  val dellInspiron = Item(34, "Dell Inspiron 13", "notebook")
+  val xiaomiMoped = Item(35, "Xiaomi S1", "moped", "mobility")
 
   println:
     warehouse.contains(dellXps.code) // false
