@@ -17,13 +17,20 @@ object ScalaLogics:
   ) extends ScalaLogics:
     checkValidNumberOfMines()
     val grid = GridImpl(size, numberOfMines)
+    grid.randomizeGrid()
+    writeAdiacents()
     def getGrid(): Grid = grid
     def triggerCell(position: e2.Pair[Integer, Integer]): Unit =
       val cell = grid.getCell(position)
       cell.trigger()
       if !cell.isMine() then recursiveTriggerAdiacentCells(position)
     def isWinCondition(): Boolean =
-      countRemainingSafeCells() == (size ^ 2) - numberOfMines
+      var safeCounter: Int = 0
+      grid.forEach((cell: Cell) =>
+        if !cell.isMine() && cell.isTriggered() then
+          safeCounter = safeCounter + 1
+      )
+      safeCounter == ((size * size) - numberOfMines)
 
     def isLoseCondition(): Boolean =
       var isLose = false
@@ -32,6 +39,19 @@ object ScalaLogics:
       )
       isLose
 
+    private def writeAdiacents(): Unit =
+      for i: Int <- 0 to size - 1 do
+        for j: Int <- 0 to size - 1 do
+          var position = e2.Pair(Integer(i), Integer(j))
+          var cell: Cell = grid.getCell(position)
+          if cell.isMine() then cell.setText("*")
+          else
+            cell.setText(
+              grid
+                .getNumberOfAdiacentMines(position)
+                .toString()
+            )
+
     private def checkValidNumberOfMines(): Unit =
       if this.numberOfMines <= 0 || this.numberOfMines > (this.size * this.size) / 2
       then throw new IllegalArgumentException("Invalid number of mines");
@@ -39,7 +59,7 @@ object ScalaLogics:
     private def countRemainingSafeCells(): Int =
       var counter = 0
       grid.forEach((cell: Cell) =>
-        if !cell.isMine() && !cell.isTriggered() then counter = counter + 1
+        if !cell.isMine() && cell.isTriggered() then counter = counter + 1
       )
       counter
 
@@ -50,8 +70,10 @@ object ScalaLogics:
     private def recursiveTriggerAdiacentCells(
         position: e2.Pair[Integer, Integer]
     ): Unit =
-      for i: Int <- -1 to position.getX() + 1 do
-        for j: Int <- -1 to position.getY() + 1 do
+      val xPos = position.getX()
+      for i: Int <- xPos - 1 to xPos + 1 do
+        val yPos = position.getY()
+        for j: Int <- yPos - 1 to yPos + 1 do
           val newPosition = e2.Pair(Integer(i), Integer(j))
           if isValidPosition(newPosition) then
             val cell = grid.getCell(newPosition)
