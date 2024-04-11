@@ -10,12 +10,13 @@ import org.junit.jupiter.api.Test;
 public class LogicsTest {
 
     private Logics logics;
-    private GameLogicDifficulty difficulty = GameLogicDifficulty.EASY;
+    private int numberOfMines;
     private int size = 8;
 
     @BeforeEach
     public void setUp() {
-        this.logics = new LogicsImpl(size, difficulty);
+        this.numberOfMines = 1;
+        this.logics = new LogicsImpl(size, numberOfMines);
     }
 
     @Test
@@ -35,46 +36,40 @@ public class LogicsTest {
 
     @Test
     public void isWinCondition() {
-        var localLogics = new LogicsImpl(8, 1);
-        localLogics.triggerCell(new Pair<>(0, 1));
-        assertTrue(localLogics.isWinCondition());
+        this.logics.triggerCell(new Pair<>(0, 1));
+        assertTrue(this.logics.isWinCondition());
     }
 
     @Test
     public void isLoseCondition() {
-        var localLogics = new LogicsImpl(8, 1);
-        localLogics.triggerCell(new Pair<>(0, 0));
-        assertTrue(localLogics.isLoseCondition());
+        this.logics.triggerCell(new Pair<>(0, 0));
+        assertTrue(this.logics.isLoseCondition());
     }
 
     @Test
     public void correctAdiacentValuesHorizontal() {
-        var localLogics = new LogicsImpl(8, 1);
-        var localGrid = localLogics.getGrid();
+        var localGrid = this.logics.getGrid();
         var cell = localGrid.getCell(new Pair<>(1, 0));
         assertEquals(cell.getText(), "1");
     }
 
     @Test
     public void correctAdiacentValuesVertical() {
-        var localLogics = new LogicsImpl(8, 1);
-        var localGrid = localLogics.getGrid();
+        var localGrid = this.logics.getGrid();
         var cell = localGrid.getCell(new Pair<>(0, 1));
         assertEquals(cell.getText(), "1");
     }
 
     @Test
     public void correctAdiacentValuesDiagonal() {
-        var localLogics = new LogicsImpl(8, 1);
-        var localGrid = localLogics.getGrid();
+        var localGrid = this.logics.getGrid();
         var cell = localGrid.getCell(new Pair<>(1, 1));
         assertEquals(cell.getText(), "1");
     }
 
     @Test
     public void correctAdiacentValuesNoMine() {
-        var localLogics = new LogicsImpl(8, 1);
-        var localGrid = localLogics.getGrid();
+        var localGrid = this.logics.getGrid();
         var cell = localGrid.getCell(new Pair<>(2, 1));
         assertEquals(cell.getText(), "0");
     }

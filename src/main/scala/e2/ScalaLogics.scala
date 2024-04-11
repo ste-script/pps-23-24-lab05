@@ -1,5 +1,4 @@
 package e2
-import e2.GameLogicDifficulty
 
 trait ScalaLogics extends Logics
 
@@ -53,10 +52,12 @@ object ScalaLogics:
     ): Unit =
       for i: Int <- -1 to position.getX() + 1 do
         for j: Int <- -1 to position.getY() + 1 do
-          val newPosition = e2.Pair(i, j)
+          val newPosition = e2.Pair(Integer(i), Integer(j))
           if isValidPosition(newPosition) then
             val cell = grid.getCell(newPosition)
             if !cell.isMine() && !cell.isTriggered() then
               cell.trigger()
               if grid.getNumberOfAdiacentMines(newPosition) == 0 then
                 recursiveTriggerAdiacentCells(newPosition)
+
+@main def test() = ScalaLogics(10, 10)
