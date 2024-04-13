@@ -12,7 +12,7 @@ trait ScalaLogics:
 
   def hit(x: Int, y: Int): Unit
 
-  def grid: ScalaGrid
+  def cell(x: Int, y: Int): ScalaCell
 
 trait ScalaCell:
   def cellType: CellType
@@ -72,11 +72,13 @@ object ScalaLogics:
     LogicsImpl(size)
 
   private case class LogicsImpl(size: Int) extends ScalaLogics:
-    var grid: ScalaGrid = ScalaGrid(
+    private var grid: ScalaGrid = ScalaGrid(
       size,
       initGrid
     )
     grid = calculateValues
+
+    def cell(x: Int, y: Int): ScalaCell = grid.cell(x, y)
 
     def hit(x: Int, y: Int): Unit =
       val cell = grid.cell(x, y)

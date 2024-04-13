@@ -84,7 +84,7 @@ public class GUI extends JFrame {
     }
 
     private void filterGrid(Map.Entry<JButton, Pair<Integer, Integer>> entry, Predicate<ScalaCell> predicate) {
-        var cell = logics.grid().cell(entry.getValue().getX(), entry.getValue().getY());
+        var cell = logics.cell(entry.getValue().getX(), entry.getValue().getY());
         if (predicate.test(cell)) {
             entry.getKey().setText(cell.value());
             entry.getKey().setEnabled(false);
